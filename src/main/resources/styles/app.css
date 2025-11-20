@@ -1,0 +1,25 @@
+.login-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.login-input {
+    -fx-background-radius: 4;
+    -fx-background-color: white;
+    -fx-padding: 6 8 6 8;
+    -fx-border-color: #bfbfbf;
+    -fx-border-radius: 4;
+}
+
+.login-button {
+    -fx-background-color: white;
+    -fx-background-radius: 4;
+    -fx-border-color: #bfbfbf;
+    -fx-border-radius: 4;
+    -fx-padding: 6;
+}
+
+.login-button:hover {
+    -fx-background-color: #f0f0f0;
+}

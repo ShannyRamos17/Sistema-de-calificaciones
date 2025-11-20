@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.calificaciones.controllers.PrincipalController">
+
+    <!-- BARRA SUPERIOR -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT"
+              style="-fx-background-color: #E6E6E6; -fx-padding: 10 20;">
+
+            <Label fx:id="lblNombreMaestro" text="Emilia Soto Mendoza"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+
+            <Label fx:id="lblGrado" text="5to Grado"
+                   style="-fx-font-size: 14px;" />
+
+            <!-- Esto empuja los botones a la derecha -->
+            <Pane HBox.hgrow="ALWAYS" />
+
+            <!-- BOTÓN NUEVO ALUMNO -->
+            <Button fx:id="btnNuevoAlumno"
+                    text="Nuevo Alumno"
+                    style="-fx-font-size: 14px; -fx-background-radius: 8; -fx-padding: 6 12;" />
+
+            <!-- BOTÓN DE MENÚ -->
+            <Button fx:id="btnMenu"
+                    text="≡"
+                    style="-fx-font-size: 18px; -fx-background-color: transparent;" />
+        </HBox>
+    </top>
+
+    <!-- CONTENIDO CENTRAL -->
+    <center>
+        <VBox spacing="15" alignment="TOP_CENTER" style="-fx-padding: 20;">
+            <TableView fx:id="tablaAlumnos" prefWidth="650">
+
+                <columns>
+                    <TableColumn fx:id="colNumero" text="N°" prefWidth="60"/>
+                    <TableColumn fx:id="colNombre" text="Nombre del Alumno" prefWidth="450"/>
+                    <TableColumn fx:id="colModificar" text="Modificar" prefWidth="120"/>
+                </columns>
+
+            </TableView>
+
+            <!-- PAGINACIÓN -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnAnterior" text="&lt;" />
+                <Label fx:id="lblPaginacion" text="1 - 7 / 20" />
+                <Button fx:id="btnSiguiente" text="&gt;" />
+            </HBox>
+        </VBox>
+    </center>
+
+
+
+</BorderPane>
+
