@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.calificaciones.controllers.EliminarAlumnoController"
+            style="-fx-padding: 20; -fx-background-color: #FFFFFF;">
+
+    <!-- BARRA SUPERIOR -->
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="15"
+              style="-fx-padding: 10 20; -fx-background-color: #FFFFFF;">
+            <Label text="Eliminar Alumno"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+
+    <!-- CONTENIDO CENTRAL -->
+    <center>
+        <VBox spacing="20" alignment="TOP_CENTER">
+
+            <!-- TABLA -->
+            <TableView fx:id="tablaEliminar"
+                       prefWidth="700" prefHeight="380">
+                <columns>
+                    <TableColumn fx:id="colNumero"
+                                 text="N°"
+                                 prefWidth="60"
+                                 style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colNombre"
+                                 text="Nombre del Alumno"
+                                 prefWidth="450"/>
+                    <TableColumn fx:id="colEliminar"
+                                 text="Eliminar"
+                                 prefWidth="140"
+                                 style="-fx-alignment: CENTER;"/>
+                </columns>
+            </TableView>
+
+            <!-- PAGINACIÓN -->
+            <HBox spacing="12"
+                  alignment="CENTER"
+                  style="-fx-padding: 5;">
+                <Button fx:id="btnAnterior"
+                        text="&lt;"
+                        style="-fx-background-color: #E0E0E0; -fx-padding: 5 10; -fx-background-radius: 8;"/>
+                <Label fx:id="lblPaginacion"
+                       text="1 - 7 / 20"
+                       style="-fx-font-size: 14px;" />
+                <Button fx:id="btnSiguiente"
+                        text="&lt;"
+                        style="-fx-background-color: #E0E0E0; -fx-padding: 5 10; -fx-background-radius: 8;"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <!-- BOTÓN CANCELAR -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT"
+              style="-fx-padding: 10 20;">
+            <Button fx:id="btnCancelar"
+                    text="Cancelar"
+                    style="-fx-background-color: #D9D9D9;
+                           -fx-padding: 8 18;
+                           -fx-background-radius: 8;
+                           -fx-font-size: 14px;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

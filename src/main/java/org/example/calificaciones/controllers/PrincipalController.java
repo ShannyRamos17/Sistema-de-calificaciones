@@ -1,5 +1,6 @@
 package org.example.calificaciones.controllers;
 
+import javafx.beans.property.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -12,7 +13,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+
+import java.net.URL;
 
 public class PrincipalController {
 
@@ -26,33 +30,31 @@ public class PrincipalController {
     @FXML private Label lblNombreMaestro, lblGrado;
 
     @FXML private Button btnNuevoAlumno;
-    @FXML private Button btnMenu; // 🔹 BOTÓN DE HAMBURGUESA
+    @FXML private Button btnMenu;
 
-    private PopupControl popupMenu;
-    @FXML private VBox contenedorMenu; // 🔹 Donde se colocará el menú lateral
+    private Popup popupMenu;
 
     private ObservableList<AlumnoRow> alumnos = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
 
-        // Vincular columnas
-        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colModificar.setCellValueFactory(new PropertyValueFactory<>("botonModificar"));
+        // Columnas
+        colNumero.setCellValueFactory(cell -> cell.getValue().numeroProperty().asObject());
+        colNombre.setCellValueFactory(cell -> cell.getValue().nombreProperty());
+        colModificar.setCellValueFactory(cell -> cell.getValue().botonModificarProperty());
 
         cargarDatosEjemplo();
 
-        // ⭐ BOTÓN: Añadir nuevo alumno
+        // Botón: nuevo alumno
         btnNuevoAlumno.setOnAction(e -> {
             String nombre = mostrarNuevoAlumno();
             if (nombre != null && !nombre.isEmpty()) {
-                int nuevoNum = alumnos.size() + 1;
-                alumnos.add(new AlumnoRow(nuevoNum, nombre));
+                alumnos.add(new AlumnoRow(alumnos.size() + 1, nombre));
             }
         });
 
-        // ⭐ BOTÓN: Menú hamburguesa
+        // Botón menú hamburguesa
         btnMenu.setOnAction(e -> mostrarMenu());
     }
 
@@ -68,39 +70,59 @@ public class PrincipalController {
         alumnos.add(new AlumnoRow(7, "André Álvarez Cortés"));
 
         tablaAlumnos.setItems(alumnos);
-
         lblPaginacion.setText("1 - 7 / 20");
     }
 
     // ----------------------------------------------------------
-    //              🎓 Clase interna AlumnoRow
+    //              🎓 Clase interna AlumnoRow (NUEVA)
     // ----------------------------------------------------------
     public static class AlumnoRow {
-        private int numero;
-        private String nombre;
-        private Button botonModificar;
+
+        private final SimpleIntegerProperty numero;
+        private final SimpleStringProperty nombre;
+
+        private final ObjectProperty<Button> botonModificar;
+        private final ObjectProperty<Button> botonEliminar;
 
         public AlumnoRow(int numero, String nombre) {
-            this.numero = numero;
-            this.nombre = nombre;
+            this.numero = new SimpleIntegerProperty(numero);
+            this.nombre = new SimpleStringProperty(nombre);
 
-            botonModificar = new Button("✎");
-            botonModificar.setOnAction(e ->
+            // Botón modificar
+            Button btnMod = new Button("✎");
+            btnMod.setStyle("-fx-font-size: 14px;");
+            btnMod.setOnAction(e ->
                     System.out.println("Modificar alumno: " + nombre)
             );
+            this.botonModificar = new SimpleObjectProperty<>(btnMod);
+
+            // Botón eliminar (para otras pantallas)
+            Button btnDel = new Button("🗑");
+            btnDel.setStyle("-fx-font-size: 14px;");
+            this.botonEliminar = new SimpleObjectProperty<>(btnDel);
         }
 
-        public int getNumero() { return numero; }
-        public String getNombre() { return nombre; }
-        public Button getBotonModificar() { return botonModificar; }
+        // GETTERS REQUERIDOS POR TABLEVIEW
+        public int getNumero() { return numero.get(); }
+        public String getNombre() { return nombre.get(); }
+        public Button getBotonModificar() { return botonModificar.get(); }
+        public Button getBotonEliminar() { return botonEliminar.get(); }
+
+        // PROPIEDADES
+        public SimpleIntegerProperty numeroProperty() { return numero; }
+        public SimpleStringProperty nombreProperty() { return nombre; }
+        public ObjectProperty<Button> botonModificarProperty() { return botonModificar; }
+        public ObjectProperty<Button> botonEliminarProperty() { return botonEliminar; }
     }
 
     // ----------------------------------------------------------
-    //              ⭐ Mostrar ventana "Nuevo Alumno"
+    //              ⭐ Ventana "Nuevo Alumno"
     // ----------------------------------------------------------
     private String mostrarNuevoAlumno() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/calificaciones/views/NuevoAlumno.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/org/example/calificaciones/views/NuevoAlumno.fxml"
+            ));
             Parent root = loader.load();
 
             Stage dialogStage = new Stage();
@@ -120,7 +142,7 @@ public class PrincipalController {
     }
 
     // ----------------------------------------------------------
-    //              ⭐ Mostrar menú hamburguesa
+    //              ⭐ Popup menú hamburguesa
     // ----------------------------------------------------------
     @FXML
     private void mostrarMenu() {
@@ -131,13 +153,14 @@ public class PrincipalController {
         }
 
         VBox contenedor = new VBox(5);
-        contenedor.setStyle("-fx-background-color: #E6E6E6; -fx-padding: 10; -fx-pref-width: 180;");
+        contenedor.setStyle("-fx-background-color: #E6E6E6; -fx-padding: 10;");
         contenedor.setAlignment(Pos.CENTER_LEFT);
 
         Button btnCerrarSesion = crearBoton("Cerrar Sesión");
         Button btnModificarMaterias = crearBoton("Modificar Materias");
         Button btnAnadirAlumno = crearBoton("Añadir Alumno");
         Button btnEliminarAlumno = crearBoton("Eliminar Alumno");
+        btnEliminarAlumno.setOnAction(e -> abrirEliminarAlumno());
         Button btnBuscarAlumno = crearBoton("Buscar Alumno");
 
         contenedor.getChildren().addAll(
@@ -148,44 +171,62 @@ public class PrincipalController {
                 btnBuscarAlumno
         );
 
-        popupMenu = new PopupControl();
-        popupMenu.getScene().setRoot(contenedor);
+        popupMenu = new Popup();
+        popupMenu.getContent().add(contenedor);
         popupMenu.setAutoHide(true);
 
-        // Mostrarlo a la derecha del botón hamburguesa
         Node boton = btnMenu;
-        popupMenu.show(boton, boton.localToScreen(boton.getBoundsInLocal()).getMaxX(),
-                boton.localToScreen(boton.getBoundsInLocal()).getMaxY());
+        double x = boton.localToScreen(boton.getBoundsInLocal()).getMaxX();
+        double y = boton.localToScreen(boton.getBoundsInLocal()).getMaxY();
+
+        popupMenu.show(boton, x, y);
     }
 
-
-    /** Método para crear botones con el mismo estilo */
     private Button crearBoton(String texto) {
         Button b = new Button(texto);
-        b.setMaxWidth(Double.MAX_VALUE);
+        b.setMaxWidth(160);
+        b.setPrefWidth(160);
+
         b.setStyle("""
             -fx-background-color: #D9D9D9;
-            -fx-padding: 8 10;
+            -fx-padding: 10 10;
             -fx-font-size: 14px;
             -fx-alignment: CENTER_LEFT;
-            """);
+        """);
 
-        // Efecto hover
         b.setOnMouseEntered(e -> b.setStyle("""
             -fx-background-color: #C8C8C8;
-            -fx-padding: 8 10;
+            -fx-padding: 10 10;
             -fx-font-size: 14px;
             -fx-alignment: CENTER_LEFT;
-            """));
+        """));
 
         b.setOnMouseExited(e -> b.setStyle("""
             -fx-background-color: #D9D9D9;
-            -fx-padding: 8 10;
+            -fx-padding: 10 10;
             -fx-font-size: 14px;
             -fx-alignment: CENTER_LEFT;
-            """));
+        """));
 
         return b;
     }
+
+    // ----------------------------------------------------------
+    //              ⭐ Abrir pantalla Eliminar Alumno
+    // ----------------------------------------------------------
+    private void abrirEliminarAlumno() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/EliminarAlumno.fxml"));
+
+            Parent root = loader.load();
+
+            Stage stage = (Stage) btnMenu.getScene().getWindow();
+            stage.setScene(new Scene(root));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
