@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.calificaciones.controllers.ModificarMateriasController"
+            style="-fx-background-color: #FFFFFF; -fx-padding: 20;">
+
+    <top>
+        <VBox spacing="10" style="-fx-padding: 0 0 20 0;">
+            <Label text="Modificar Materias" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Los cambios afectarán a todos los alumnos." style="-fx-text-fill: #666;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tablaMaterias" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colMateria" text="Nombre de la Materia" prefWidth="400"/>
+                <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="150" style="-fx-alignment: CENTER;"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <bottom>
+        <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+            <Button text="Nueva Materia" onAction="#agregarMateria" style="-fx-background-color: #E0E0E0;"/>
+            <Button text="Cancelar" onAction="#cerrarVentana" style="-fx-background-color: #D9D9D9;"/>
+            <Button text="Guardar Cambios" onAction="#guardarCambios" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -1,41 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
+    <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
+    <?import javafx.scene.control.Button?>
+    <?import javafx.scene.layout.VBox?>
+    <?import javafx.geometry.Insets?>
 
-<VBox spacing="10" style="-fx-background-color: #F2F2F2;" prefWidth="200"
-      xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:id="menuLateral">
+    <VBox spacing="10" style="-fx-background-color: #F2F2F2;" prefWidth="200"
+          xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:id="menuLateral">
 
-    <padding>
-        <Insets top="20" right="10" bottom="20" left="10"/>
-    </padding>
+        <padding>
+            <Insets top="20" right="10" bottom="20" left="10"/>
+        </padding>
 
-    <Button text="Cerrar Sesión"
-            fx:id="btnCerrarSesion"
-            style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
-            prefHeight="40"/>
+        <Button text="Cerrar Sesión"
+                fx:id="btnCerrarSesion"
+                style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
+                prefHeight="40"/>
 
-    <Button text="Modificar Materias"
-            fx:id="btnModificarMaterias"
-            style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
-            prefHeight="40"/>
+        <Button text="Modificar Materias"
+                fx:id="btnModificarMaterias"
+                style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
+                prefHeight="40"/>
 
-    <Button text="Añadir Alumno"
-            fx:id="btnAñadirAlumno"
-            style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
-            prefHeight="40"/>
+        <Button text="Añadir Alumno"
+                fx:id="btnAñadirAlumno"
+                style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
+                prefHeight="40"/>
 
-    <Button text="Eliminar Alumno"
-            fx:id="btnEliminarAlumno"
-            style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
-            prefHeight="40"/>
+        <Button text="Eliminar Alumno"
+                fx:id="btnEliminarAlumno"
+                style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
+                prefHeight="40"/>
 
-    <Button text="Buscar Alumno"
-            fx:id="btnBuscarAlumno"
-            style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
-            prefHeight="40"/>
+        <Button text="Buscar Alumno"
+                fx:id="btnBuscarAlumno"
+                style="-fx-background-color: #D9D9D9; -fx-font-size: 14;"
+                prefHeight="40"/>
 
-</VBox>
+    </VBox>
