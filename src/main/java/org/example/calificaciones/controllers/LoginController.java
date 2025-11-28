@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.example.calificaciones.models.DatosGlobales;
+import org.example.calificaciones.models.Docente;
 
 public class LoginController {
 
@@ -18,7 +19,6 @@ public class LoginController {
 
     @FXML
     private void onLoginClicked(ActionEvent event) {
-        // Usamos trim() para quitar espacios accidentales al inicio o final
         String usuario = txtUsuario.getText().trim();
         String contrasena = txtContrasena.getText();
 
@@ -27,48 +27,57 @@ public class LoginController {
             return;
         }
 
-        // ⭐ VALIDACIÓN DE USUARIOS PERMITIDOS
-        // Aceptamos "Director" O "Jazmin Rogel" (ignorando mayúsculas)
+        // 1. Verificar si es Administrador (Director o Josué)
         boolean esDirector = usuario.equalsIgnoreCase("Director");
-        boolean esJazmin = usuario.equalsIgnoreCase("Jazmin Rogel");
+        boolean esJosue = usuario.equalsIgnoreCase("Josué Gael Aguirre Delgado");
+        boolean esAdmin = esDirector || esJosue;
 
-        // La contraseña sigue siendo "123"
+        // 2. Verificar si es un Docente registrado en la base de datos
+        boolean esDocente = false;
+
+        // Recorremos la lista global de docentes para ver si el usuario existe
+        for (Docente d : DatosGlobales.getInstance().getListaDocentes()) {
+            if (d.getNombre().equalsIgnoreCase(usuario)) {
+                esDocente = true;
+                break;
+            }
+        }
+
+        // Contraseña universal (para el ejemplo)
         boolean passCorrecta = contrasena.equals("123");
 
-        if ((esDirector || esJazmin) && passCorrecta) {
+        if ((esAdmin || esDocente) && passCorrecta) {
 
-            // 1. Guardamos el usuario (para mostrarlo en la pantalla principal)
-            // Si escribió "director" en minúsculas, guardamos "Director" bonito, o el nombre tal cual
+            // Guardamos el nombre real para mostrarlo en la bienvenida
             String nombreAGuardar = esDirector ? "Director" : usuario;
             DatosGlobales.getInstance().setUsuarioActual(nombreAGuardar);
 
-            // 2. Entramos al sistema
-            ingresarAlSistema(event);
+            // Entramos al sistema según el rol detectado
+            ingresarAlSistema(event, esAdmin);
 
         } else {
             mostrarAlerta(Alert.AlertType.ERROR, "Acceso Denegado",
-                    "Usuario no registrado o contraseña incorrecta.\nSolo pueden ingresar: Director o Jazmin Rogel.");
+                    "Usuario no encontrado o contraseña incorrecta.");
         }
     }
 
-    private void ingresarAlSistema(ActionEvent event) {
+    private void ingresarAlSistema(ActionEvent event, boolean esAdministrador) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Principal.fxml"));
+            String rutaFXML = esAdministrador ? "/views/PrincipalDirector.fxml" : "/views/Principal.fxml";
+            String tituloVentana = esAdministrador ? "Panel de Administración" : "Sistema de Calificaciones - Docente";
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(rutaFXML));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
-
-            // Personalizamos el título de la ventana
-            String titulo = "Sistema de Calificaciones - " + DatosGlobales.getInstance().getUsuarioActual();
-            stage.setTitle(titulo);
-
+            stage.setTitle(tituloVentana);
             stage.centerOnScreen();
             stage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
-            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar la pantalla principal.");
+            mostrarAlerta(Alert.AlertType.ERROR, "Error", "No se pudo cargar la pantalla: " + (esAdministrador ? "Director" : "Docente"));
         }
     }
 

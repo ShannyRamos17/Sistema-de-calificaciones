@@ -6,39 +6,36 @@ import javafx.collections.ObservableList;
 public class DatosGlobales {
     private static DatosGlobales instancia;
     private ObservableList<Alumno> listaAlumnos;
-
-    // ⭐ NUEVO: Lista global de materias
     private ObservableList<Materia> listaMaterias;
+
+    // ⭐ NUEVO: Lista de Docentes
+    private ObservableList<Docente> listaDocentes;
+
     private String usuarioActual;
 
     private DatosGlobales() {
         listaAlumnos = FXCollections.observableArrayList();
         listaMaterias = FXCollections.observableArrayList();
+        listaDocentes = FXCollections.observableArrayList(); // Inicializar
         cargarDatosIniciales();
     }
 
     public static DatosGlobales getInstance() {
-        if (instancia == null) {
-            instancia = new DatosGlobales();
-        }
+        if (instancia == null) instancia = new DatosGlobales();
         return instancia;
     }
 
     public ObservableList<Alumno> getListaAlumnos() { return listaAlumnos; }
-
-    // ⭐ NUEVO: Getter para materias
     public ObservableList<Materia> getListaMaterias() { return listaMaterias; }
 
-    public String getUsuarioActual() {
-        return usuarioActual;
-    }
+    // ⭐ Getter para Docentes
+    public ObservableList<Docente> getListaDocentes() { return listaDocentes; }
 
-    public void setUsuarioActual(String usuarioActual) {
-        this.usuarioActual = usuarioActual;
-    }
+    public String getUsuarioActual() { return usuarioActual; }
+    public void setUsuarioActual(String usuarioActual) { this.usuarioActual = usuarioActual; }
 
     private void cargarDatosIniciales() {
-        // Cargar materias por defecto
+        // Materias
         listaMaterias.add(new Materia("Arte y Cultura"));
         listaMaterias.add(new Materia("Biología y Ciencias de la Vida"));
         listaMaterias.add(new Materia("Matemáticas: Problemas de la Vida Diaria"));
@@ -46,12 +43,18 @@ public class DatosGlobales {
         listaMaterias.add(new Materia("Español: Principios del Lenguaje"));
         listaMaterias.add(new Materia("Ingles IV"));
 
-        // Cargar alumnos (con sus calificaciones basadas en las materias)
-        Alumno a1 = new Alumno(1, "Manuel Torres Rivera");
-        a1.inicializarMaterias(listaMaterias); // Método nuevo que crearemos
+        // Alumnos
+        Alumno a1 = new Alumno(1, "William Samano");
+        a1.inicializarMaterias(listaMaterias);
         listaAlumnos.add(a1);
 
-        // ... agrega más alumnos si quieres ...
+        // ⭐ NUEVO: Cargar Docentes de Ejemplo (Según tu imagen)
+        listaDocentes.add(new Docente(1, "Shanny Ramos"));
+        listaDocentes.add(new Docente(2, "Murat Castro"));
+        listaDocentes.add(new Docente(3, "Leonardo Espinoza"));
+        listaDocentes.add(new Docente(4, "Angelica Tapia"));
+        listaDocentes.add(new Docente(5, "Monserrat Torres"));
+        listaDocentes.add(new Docente(6, "Samuel Rivera"));
+        listaDocentes.add(new Docente(7, "Mauricio Velazquez"));
     }
-
 }

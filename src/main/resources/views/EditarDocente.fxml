@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.calificaciones.controllers.EditarDocenteController"
+           style="-fx-background-color: rgba(0,0,0,0.4);">
+
+    <VBox spacing="20" alignment="CENTER"
+          style="-fx-background-color: #E6E6E6; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);"
+          maxWidth="400">
+
+        <Label text="Modificar Nombre del Docente"
+               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+
+        <TextField fx:id="txtNombre"
+                   promptText="Nombre completo del docente"
+                   style="-fx-font-size: 14px; -fx-padding: 8; -fx-background-radius: 5;"/>
+
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="btnCancelar" text="Cancelar"
+                    style="-fx-background-color: #D9D9D9; -fx-text-fill: black; -fx-background-radius: 5; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #999; -fx-border-radius: 5;"/>
+
+            <Button fx:id="btnGuardar" text="Guardar"
+                    style="-fx-background-color: #D9D9D9; -fx-text-fill: black; -fx-background-radius: 5; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-color: #999; -fx-border-radius: 5; -fx-font-weight: bold;"/>
+        </HBox>
+
+    </VBox>
+
+</StackPane>
