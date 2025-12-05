@@ -1,5 +1,6 @@
 package org.example.calificaciones.controllers;
 
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +35,7 @@ public class PrincipalController {
 
     private Popup popupMenu;
 
-    // Lista inteligente para filtrar
+    // Lista inteligente para filtrar (Buscador local)
     private FilteredList<Alumno> listaFiltrada;
 
     @FXML
@@ -50,9 +51,26 @@ public class PrincipalController {
             lblGrado.setText("(Docente)");
         }
 
-        colNumero.setCellValueFactory(cell -> cell.getValue().numeroProperty().asObject());
+        // -----------------------------------------------------------------------
+        // ⭐ CAMBIO VISUAL: Numeración consecutiva (1, 2, 3...)
+        // Usamos la posición de la fila + 1 en lugar del ID de base de datos
+        // -----------------------------------------------------------------------
+        colNumero.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    // getIndex() devuelve 0, 1, 2... le sumamos 1 para mostrar 1, 2, 3...
+                    setText(String.valueOf(getIndex() + 1));
+                }
+            }
+        });
+
         colNombre.setCellValueFactory(cell -> cell.getValue().nombreProperty());
 
+        // Configuración de los botones de acción en la tabla
         colModificar.setCellFactory(param -> new TableCell<>() {
             private final Button btnEditar = new Button("✎");
             private final Button btnReportes = new Button("📋");
@@ -83,15 +101,37 @@ public class PrincipalController {
             }
         });
 
-        listaFiltrada = new FilteredList<>(DatosGlobales.getInstance().getListaAlumnos(), p -> true);
+        // Cargar SOLAMENTE los alumnos del docente conectado
+        ObservableList<Alumno> misAlumnos = DatosGlobales.getInstance().getAlumnosDelDocenteActual();
+
+        // Envolvemos esa lista en OTRA FilteredList local para que funcione el buscador de texto
+        listaFiltrada = new FilteredList<>(misAlumnos, p -> true);
+
         tablaAlumnos.setItems(listaFiltrada);
         actualizarContador();
 
+        // -----------------------------------------------------------------------
+        // Lógica para nuevo alumno
+        // -----------------------------------------------------------------------
         btnNuevoAlumno.setOnAction(e -> {
             String nombre = abrirDialogoAlumno(null, "Nuevo Alumno");
+
             if (nombre != null && !nombre.isEmpty()) {
+                // 1. Obtener ID del docente actual
+                int idDocente = DatosGlobales.getInstance().getIdDocenteLogueado();
+
+                // 2. Generar nuevo ID único interno (para la base de datos)
                 int nuevoId = DatosGlobales.getInstance().getListaAlumnos().size() + 1;
-                DatosGlobales.getInstance().getListaAlumnos().add(new Alumno(nuevoId, nombre));
+
+                // 3. Crear instancia PASANDO EL ID DEL DOCENTE
+                Alumno nuevo = new Alumno(nuevoId, nombre, idDocente);
+
+                // 4. Inicializar sus materias
+                nuevo.inicializarMaterias(DatosGlobales.getInstance().getListaMaterias());
+
+                // 5. Agregar a la lista GLOBAL (la tabla se actualiza sola por el filtro)
+                DatosGlobales.getInstance().getListaAlumnos().add(nuevo);
+
                 actualizarContador();
             }
         });
@@ -101,12 +141,13 @@ public class PrincipalController {
 
     private void actualizarContador() {
         int visibles = listaFiltrada.size();
-        int total = DatosGlobales.getInstance().getListaAlumnos().size();
+        // Total de MIS alumnos, no de toda la base de datos
+        int total = DatosGlobales.getInstance().getAlumnosDelDocenteActual().size();
         lblPaginacion.setText(visibles + " / " + total);
     }
 
     // ----------------------------------------------------------
-    //              ⭐ MENÚ ACTUALIZADO
+    //              MENÚ DESPLEGABLE
     // ----------------------------------------------------------
     private void mostrarMenu() {
         if (popupMenu != null && popupMenu.isShowing()) {
@@ -118,29 +159,24 @@ public class PrincipalController {
         contenedor.setStyle("-fx-background-color: #E6E6E6; -fx-padding: 10; -fx-border-color: #999;");
         contenedor.setAlignment(Pos.CENTER_LEFT);
 
-        // 1. Cerrar Sesión
         Button btnCerrarSesion = crearBotonMenu("Cerrar Sesión");
         btnCerrarSesion.setOnAction(e -> cerrarSesion());
 
-        // 2. Modificar Materias
         Button btnModificarMaterias = crearBotonMenu("Modificar Materias");
         btnModificarMaterias.setOnAction(e -> {
             if (popupMenu != null) popupMenu.hide();
             abrirModificarMaterias();
         });
 
-        // 3. Eliminar Alumno
         Button btnEliminarAlumno = crearBotonMenu("Eliminar Alumno");
         btnEliminarAlumno.setOnAction(e -> abrirEliminarAlumno());
 
-        // 4. Buscar Alumno
         Button btnBuscarAlumno = crearBotonMenu("Buscar Alumno");
         btnBuscarAlumno.setOnAction(e -> {
             if (popupMenu != null) popupMenu.hide();
             abrirBuscador();
         });
 
-        // ⭐ Agregamos SOLO los botones que pediste en el orden de la imagen
         contenedor.getChildren().addAll(
                 btnCerrarSesion,
                 btnModificarMaterias,

@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox; // Importante para agrupar botones
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -39,11 +40,27 @@ public class PrincipalDirectorController {
         colNumero.setCellValueFactory(cell -> cell.getValue().numeroProperty().asObject());
         colNombre.setCellValueFactory(cell -> cell.getValue().nombreProperty());
 
-        // 3. Configurar Botón "Ver/Editar"
+        // 3. Configurar Columna de ACCIONES (Ingresar + Ver)
         colVer.setCellFactory(param -> new TableCell<>() {
+
+            // Botón A: Ingresar como docente (Flecha)
+            private final Button btnIngresar = new Button("➜");
+            // Botón B: Ver detalles (Ojo)
             private final Button btnVer = new Button("👁");
+            // Contenedor para ponerlos juntos
+            private final HBox panelBotones = new HBox(10, btnIngresar, btnVer);
 
             {
+                // Estilo Botón Ingresar (Azul)
+                btnIngresar.setStyle("-fx-font-size: 14px; -fx-background-color: #4A90E2; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;");
+                btnIngresar.setTooltip(new Tooltip("Ingresar al panel de este docente"));
+
+                btnIngresar.setOnAction(event -> {
+                    Docente docente = getTableView().getItems().get(getIndex());
+                    entrarComoDocente(docente); // <--- Llama a la nueva función
+                });
+
+                // Estilo Botón Ver (Gris)
                 btnVer.setStyle("-fx-font-size: 16px; -fx-background-color: #D9D9D9; -fx-cursor: hand; -fx-background-radius: 5; -fx-padding: 2 10;");
                 btnVer.setTooltip(new Tooltip("Modificar nombre del docente"));
 
@@ -52,7 +69,7 @@ public class PrincipalDirectorController {
                     abrirEditorDocente(docente);
                 });
 
-                setAlignment(Pos.CENTER);
+                panelBotones.setAlignment(Pos.CENTER);
             }
 
             @Override
@@ -61,7 +78,7 @@ public class PrincipalDirectorController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(btnVer);
+                    setGraphic(panelBotones);
                 }
             }
         });
@@ -79,6 +96,32 @@ public class PrincipalDirectorController {
     private void actualizarPaginacion() {
         int total = DatosGlobales.getInstance().getListaDocentes().size();
         lblPaginacion.setText("1 - " + total + " / " + total);
+    }
+
+    // ----------------------------------------------------------
+    //              NUEVA LÓGICA: IMPERSONAR DOCENTE
+    // ----------------------------------------------------------
+    private void entrarComoDocente(Docente docente) {
+        try {
+            // 1. Cambiamos el usuario global al nombre del docente seleccionado
+            // Esto es lo que permite ver SU información en la siguiente pantalla
+            DatosGlobales.getInstance().setUsuarioActual(docente.getNombre());
+
+            // 2. Cargamos la vista del Docente (Principal.fxml)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/Principal.fxml"));
+            Parent root = loader.load();
+
+            // 3. Cambiamos la escena actual
+            Stage stage = (Stage) btnMenu.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Sistema de Calificaciones - " + docente.getNombre());
+            stage.centerOnScreen();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "No se pudo cargar la vista del docente.");
+            alert.show();
+        }
     }
 
     // ----------------------------------------------------------
@@ -138,7 +181,6 @@ public class PrincipalDirectorController {
     //              ACCIONES Y NAVEGACIÓN
     // ----------------------------------------------------------
 
-    // ⭐ MÉTODO ACTUALIZADO: Abre la pantalla AnadirDocente.fxml
     private void abrirAnadirDocente() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/AnadirDocente.fxml"));
@@ -152,10 +194,7 @@ public class PrincipalDirectorController {
             scene.setFill(Color.TRANSPARENT);
             stage.setScene(scene);
 
-            // Mostrar y esperar
             stage.showAndWait();
-
-            // Al cerrar, actualizamos la paginación y la tabla se actualiza sola porque es ObservableList
             actualizarPaginacion();
 
         } catch (Exception e) {
@@ -165,11 +204,10 @@ public class PrincipalDirectorController {
 
     private void abrirEliminarDocentes() {
         try {
-            // Abrimos la pantalla de listado para eliminar (paso intermedio)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/EliminarDocentesListado.fxml"));
             Parent root = loader.load();
 
-            Stage stage = (Stage) btnMenu.getScene().getWindow(); // Usamos la misma ventana
+            Stage stage = (Stage) btnMenu.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Eliminar Docentes");
             stage.centerOnScreen();

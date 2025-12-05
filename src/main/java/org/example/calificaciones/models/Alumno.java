@@ -9,12 +9,17 @@ public class Alumno {
     private final SimpleIntegerProperty numero;
     private final SimpleStringProperty nombre;
 
+    // ⭐ NUEVO: Guardamos el ID del docente que creó al alumno
+    private int idDocente;
+
     // La "mochila" de calificaciones
     private ObservableList<CalificacionRow> calificaciones;
 
-    public Alumno(int numero, String nombre) {
+    // Actualizamos el constructor para pedir el ID del Docente
+    public Alumno(int numero, String nombre, int idDocente) {
         this.numero = new SimpleIntegerProperty(numero);
         this.nombre = new SimpleStringProperty(nombre);
+        this.idDocente = idDocente; // Guardamos el dueño del alumno
         this.calificaciones = FXCollections.observableArrayList();
     }
 
@@ -25,6 +30,9 @@ public class Alumno {
     public void setNombre(String nombre) { this.nombre.set(nombre); }
     public SimpleStringProperty nombreProperty() { return nombre; }
 
+    // Getter para saber de quién es este alumno
+    public int getIdDocente() { return idDocente; }
+
     public ObservableList<CalificacionRow> getCalificaciones() {
         return calificaciones;
     }
@@ -33,31 +41,22 @@ public class Alumno {
         this.calificaciones.setAll(nuevasCalificaciones);
     }
 
-    // ⭐ NUEVO MÉTODO: Sincronizar con la lista global de materias
-    // Este método se llama desde ModificarMateriasController cuando guardas cambios
     public void inicializarMaterias(ObservableList<Materia> materiasGlobales) {
-
         ObservableList<CalificacionRow> nuevaLista = FXCollections.observableArrayList();
 
         for (Materia mGlobal : materiasGlobales) {
             boolean encontrada = false;
-
-            // 1. Buscamos si el alumno ya tenía esta materia para NO borrarle la nota
             for (CalificacionRow rowActual : this.calificaciones) {
                 if (rowActual.materiaProperty().get().equals(mGlobal.getNombre())) {
-                    nuevaLista.add(rowActual); // Conservamos la fila con sus notas viejas
+                    nuevaLista.add(rowActual);
                     encontrada = true;
                     break;
                 }
             }
-
-            // 2. Si es una materia nueva (o cambió de nombre), la creamos vacía
             if (!encontrada) {
                 nuevaLista.add(new CalificacionRow(mGlobal.getNombre()));
             }
         }
-
-        // 3. Reemplazamos la lista vieja con la nueva (ordenada según las materias globales)
         this.calificaciones.setAll(nuevaLista);
     }
 }
