@@ -25,7 +25,6 @@ public class ReportesController {
     @FXML private Button btnCancelar;
     @FXML private Button btnGuardar;
 
-    // ⭐ NUEVAS ETIQUETAS PARA LA CABECERA
     @FXML private Label lblNombreMaestro;
     @FXML private Label lblGrado;
 
@@ -35,7 +34,7 @@ public class ReportesController {
 
     @FXML
     public void initialize() {
-        // ⭐ LÓGICA DE BIENVENIDA DINÁMICA
+
         String usuario = DatosGlobales.getInstance().getUsuarioActual();
         if (usuario != null && usuario.equalsIgnoreCase("Director")) {
             lblNombreMaestro.setText("Director");

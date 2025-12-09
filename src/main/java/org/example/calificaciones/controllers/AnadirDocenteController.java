@@ -25,11 +25,10 @@ public class AnadirDocenteController {
         String nombre = txtNombre.getText().trim();
 
         if (!nombre.isEmpty()) {
-            // Generar nuevo ID automático
+
             int nuevoId = DatosGlobales.getInstance().getListaDocentes().size() + 1;
 
-            // ⭐ Crear y agregar el docente a la lista global
-            // (Esto automáticamente habilita su login porque el LoginController lee esta lista)
+
             Docente nuevoDocente = new Docente(nuevoId, nombre);
             DatosGlobales.getInstance().getListaDocentes().add(nuevoDocente);
 

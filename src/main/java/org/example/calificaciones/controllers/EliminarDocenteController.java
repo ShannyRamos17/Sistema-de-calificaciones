@@ -31,8 +31,7 @@ public class EliminarDocenteController {
 
     private void confirmarEliminacion() {
         if (docenteAEliminar != null) {
-            // ⭐ Eliminamos de la lista global
-            // Al hacer esto, el LoginController ya no encontrará este nombre en la lista
+
             DatosGlobales.getInstance().getListaDocentes().remove(docenteAEliminar);
             eliminado = true;
             cerrar();

@@ -98,9 +98,6 @@ public class PrincipalDirectorController {
         lblPaginacion.setText("1 - " + total + " / " + total);
     }
 
-    // ----------------------------------------------------------
-    //              NUEVA LÓGICA: IMPERSONAR DOCENTE
-    // ----------------------------------------------------------
     private void entrarComoDocente(Docente docente) {
         try {
             // 1. Cambiamos el usuario global al nombre del docente seleccionado
@@ -124,9 +121,6 @@ public class PrincipalDirectorController {
         }
     }
 
-    // ----------------------------------------------------------
-    //              MENÚ HAMBURGUESA DEL DIRECTOR
-    // ----------------------------------------------------------
     private void mostrarMenu() {
         if (popupMenu != null && popupMenu.isShowing()) {
             popupMenu.hide();
@@ -176,10 +170,6 @@ public class PrincipalDirectorController {
         b.setOnMouseExited(e -> b.setStyle("-fx-background-color: #D9D9D9; -fx-padding: 10; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT;"));
         return b;
     }
-
-    // ----------------------------------------------------------
-    //              ACCIONES Y NAVEGACIÓN
-    // ----------------------------------------------------------
 
     private void abrirAnadirDocente() {
         try {

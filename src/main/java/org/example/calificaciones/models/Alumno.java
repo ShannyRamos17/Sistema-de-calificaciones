@@ -9,10 +9,10 @@ public class Alumno {
     private final SimpleIntegerProperty numero;
     private final SimpleStringProperty nombre;
 
-    // ⭐ NUEVO: Guardamos el ID del docente que creó al alumno
+
     private int idDocente;
 
-    // La "mochila" de calificaciones
+
     private ObservableList<CalificacionRow> calificaciones;
 
     // Actualizamos el constructor para pedir el ID del Docente

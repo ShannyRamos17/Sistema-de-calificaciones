@@ -51,10 +51,7 @@ public class PrincipalController {
             lblGrado.setText("(Docente)");
         }
 
-        // -----------------------------------------------------------------------
-        // ⭐ CAMBIO VISUAL: Numeración consecutiva (1, 2, 3...)
-        // Usamos la posición de la fila + 1 en lugar del ID de base de datos
-        // -----------------------------------------------------------------------
+
         colNumero.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
@@ -110,9 +107,6 @@ public class PrincipalController {
         tablaAlumnos.setItems(listaFiltrada);
         actualizarContador();
 
-        // -----------------------------------------------------------------------
-        // Lógica para nuevo alumno
-        // -----------------------------------------------------------------------
         btnNuevoAlumno.setOnAction(e -> {
             String nombre = abrirDialogoAlumno(null, "Nuevo Alumno");
 
@@ -146,9 +140,7 @@ public class PrincipalController {
         lblPaginacion.setText(visibles + " / " + total);
     }
 
-    // ----------------------------------------------------------
-    //              MENÚ DESPLEGABLE
-    // ----------------------------------------------------------
+
     private void mostrarMenu() {
         if (popupMenu != null && popupMenu.isShowing()) {
             popupMenu.hide();
@@ -193,9 +185,7 @@ public class PrincipalController {
         popupMenu.show(boton, x, y);
     }
 
-    // ----------------------------------------------------------
-    //              NAVEGACIÓN Y VENTANAS
-    // ----------------------------------------------------------
+
 
     private String abrirDialogoAlumno(Alumno alumnoAEditar, String titulo) {
         try {

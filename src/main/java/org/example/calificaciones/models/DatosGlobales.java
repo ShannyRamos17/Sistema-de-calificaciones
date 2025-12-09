@@ -32,7 +32,7 @@ public class DatosGlobales {
     public String getUsuarioActual() { return usuarioActual; }
     public void setUsuarioActual(String usuarioActual) { this.usuarioActual = usuarioActual; }
 
-    // ⭐ NUEVO: Obtener el ID del Docente logueado actualmente
+
     public int getIdDocenteLogueado() {
         if (usuarioActual == null) return -1;
 
@@ -44,7 +44,6 @@ public class DatosGlobales {
         return -1; // No encontrado
     }
 
-    // ⭐ NUEVO: Obtener solo los alumnos del maestro actual
     public FilteredList<Alumno> getAlumnosDelDocenteActual() {
         int idDocente = getIdDocenteLogueado();
 

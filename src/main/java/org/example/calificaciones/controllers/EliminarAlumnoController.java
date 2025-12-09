@@ -39,8 +39,7 @@ public class EliminarAlumnoController {
             }
         });
 
-        // ⭐ CAMBIO IMPORTANTE: Usamos la lista filtrada
-        // Esto solo mostrará los alumnos que pertenecen al usuario logueado (ej. Shanny)
+
         tablaEliminar.setItems(DatosGlobales.getInstance().getAlumnosDelDocenteActual());
 
         actualizarContador();

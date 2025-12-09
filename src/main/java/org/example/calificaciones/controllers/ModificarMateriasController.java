@@ -25,7 +25,7 @@ public class ModificarMateriasController {
         // 1. Configurar columna de Nombre (CON AUTO-GUARDADO)
         colMateria.setCellValueFactory(cell -> cell.getValue().nombreProperty());
 
-        // 👇 AQUÍ ESTÁ EL TRUCO: Definimos una celda personalizada
+
         colMateria.setCellFactory(col -> new TableCell<Materia, String>() {
             private final TextField textField = new TextField();
 

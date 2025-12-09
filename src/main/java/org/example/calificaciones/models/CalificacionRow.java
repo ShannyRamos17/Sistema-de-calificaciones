@@ -24,7 +24,7 @@ public class CalificacionRow {
     public SimpleStringProperty p3Property() { return p3; }
     public SimpleStringProperty totalProperty() { return total; }
 
-    // Método para calcular promedio automáticamente
+
     public void calcularPromedio() {
         try {
             double n1 = p1.get().isEmpty() ? 0 : Double.parseDouble(p1.get());
